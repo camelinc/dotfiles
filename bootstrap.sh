@@ -27,6 +27,10 @@ fail () {
 install_powerline() {
   fontdir="${HOME}/.fonts/"
 
+  #FIXME: pip list missing
+    #pip install list
+      #https://pip.pypa.io/en/latest/installing.html
+
   if [[ -z $(pip list | grep powerline) ]]; then
     info 'installing powerline'
     pip install --user git+git://github.com/Lokaltog/powerline
@@ -131,11 +135,20 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
     fi
   fi
 
-  info "installing Homebrew"
-  if [[ $(ruby -e "\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)") ]]; then
-    success "Tools successfully installed"
+  if [[ ! -d "/usr/local/Cellar" ]]; then
+    info "installing Homebrew"
+    if [[ $(ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)") ]]; then
+      success "Tools successfully installed"
+    else
+      fail "error installing command-line tools"
+    fi
   else
-    fail "error installing command-line tools"
+    info "updating homebrew"
+
+    CMD="brew update"
+    eval "${CMD}"
+    CMD="brew doctor"
+    eval "${CMD}"
   fi
 
   info "installing command-line tools via Homebrew"
