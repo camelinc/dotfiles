@@ -1,0 +1,56 @@
+
+#Changing the Prefix
+unbind C-b
+set -g prefix C-a
+
+#
+set -g default-terminal "screen-256color"
+
+# Cut-n-paste
+bind C-c run "tmux save-buffer - | reattach-to-user-namespace pbcopy"
+bind C-v run "reattach-to-user-namespace pbpaste | tmux load-buffer - && tmux paste-buffer"
+unbind -t vi-copy Enter
+bind-key -t vi-copy Enter copy-pipe 'reattach-to-user-namespace pbcopy'
+
+# Reload the config.
+bind r source-file ~/.tmux.conf \; display "Reloaded ~/.tmux.conf"
+
+#Pane switching with Alt+arrow
+bind -n M-Left select-pane -L
+bind -n M-Right select-pane -R
+bind -n M-Up select-pane -U
+bind -n M-Down select-pane -D
+
+#Activity Monitoring
+setw -g monitor-activity on
+set -g visual-activity on
+
+# easy-to-remember split pane commands
+bind | split-window -h
+bind - split-window -v
+unbind '"'
+unbind %
+
+#Highlighting Current Window Using Specified Colour
+set-window-option -g window-status-current-bg yellow
+
+#Mouse works as expected
+setw -g mode-mouse on
+#Pane Switching Using Mouse
+set -g mouse-select-pane on
+set -g mouse-resize-pane on
+set -g mouse-select-window on
+
+# Pane resizing
+bind -r C-h resize-pane -L 5
+bind -r C-j resize-pane -D 5
+bind -r C-k resize-pane -U 5
+bind -r C-l resize-pane -R 5
+
+#Set scrollback to 10000 lines with
+set -g history-limit 10000
+
+#Powerline Tool
+source "/home/chrisi/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf"
+
+bind B source-file ~/.tmux/bar
