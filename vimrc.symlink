@@ -97,6 +97,16 @@ set listchars+=trail:·
 set listchars+=extends:»,precedes:«
 map <silent> <F12> :set invlist<CR>
 
+if has("multi_byte")
+  if &termencoding == ""
+    let &termencoding = &encoding
+  endif
+  set encoding=utf-8
+  setglobal fileencoding=utf-8
+  "setglobal bomb
+  set fileencodings=ucs-bom,utf-8,latin1
+endif
+
 if has('gui_running')
   "set guioptions=cMg " console dialogs, do not show menu and toolbar
 
@@ -104,13 +114,19 @@ if has('gui_running')
     "set guifont=Andale\ Mono:h13
     set guifont=Liberation\ Mono\ for\ Powerline
   else
+    set guioptions-=T  " no toolbar
+
     "set guifont=Terminus:h16
-    set guifont=Liberation\ Mono\ for\ Powerline
+    "set guifont=Liberation\ Mono\ for\ Powerline
+    "set guifont=DejaVu\ Sans\ Mono\ 10
+
+    source $VIMRUNTIME/mswin.vim
+    behave mswin
   end
 
   if has('mac')
-  set noantialias
-  set fuoptions=maxvert,maxhorz ",background:#00AAaaaa
+    set noantialias
+    set fuoptions=maxvert,maxhorz ",background:#00AAaaaa
   endif
 endif
 
@@ -151,6 +167,7 @@ let g:syntastic_python_checker_args='--ignore=E501,E225'
 " Syntax highlight
 Plugin 'gmarik/vim-markdown'
 Plugin 'timcharper/textile.vim'
+Plugin 'fatih/vim-go'
 
 " Files
 Plugin 'Xuyuanp/git-nerdtree'  "NERDTree with git status support
