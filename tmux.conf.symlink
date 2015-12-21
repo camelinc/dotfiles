@@ -52,7 +52,8 @@ bind -r C-l resize-pane -R 5
 set -g history-limit 10000
 
 #Powerline Tool
-source "/home/chrisi/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf"
+#source "/Users/chrisi/Library/Python/2.7/lib/python/site-packages/powerline/bindings/tmux/powerline.conf"
+source "/usr/local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf"
 
 bind B source-file ~/.tmux/bar
 

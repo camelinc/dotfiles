@@ -188,10 +188,6 @@ Plugin 'vim-scripts/TaskList.vim'  "Eclipse like task list
 "nnoremap <leader>t <Plug>TaskList
 let mapleader = "."
 
-" Blogging
-Plugin 'itspriddle/vim-jekyll'  "Automate common Jekyll tasks
-let g:jekyll_path = "/home/chrisi/Coding/myblog"
-
 " Foo
 Plugin 'mhinz/vim-startify.git'   "fancy start screen for Vim.
 
