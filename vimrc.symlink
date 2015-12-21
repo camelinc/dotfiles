@@ -173,6 +173,7 @@ Plugin 'fatih/vim-go'
 Plugin 'Xuyuanp/git-nerdtree'  "NERDTree with git status support
 
 " Utility
+Plugin 'tmux-plugins/vim-tmux-focus-events' "This plugin restores them when using vim inside Tmux.
 Plugin 'gmarik/sudo-gui.vim' "sudo GUI for a GUI vim
 Plugin 'vim-scripts/lastpos.vim'  "Last position jump improved for Easy Vim
 Plugin 'sjl/gundo.vim.git'  "Graph vim undo tree in style
