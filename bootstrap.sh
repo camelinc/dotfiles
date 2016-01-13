@@ -2,9 +2,13 @@
 
 # http://blog.smalleycreative.com/tutorials/using-git-and-github-to-manage-your-dotfiles/
 # https://github.com/vqv/dotfiles/
+# http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming
 
-dotdir="${HOME}/Documents/Dotfiles"
-dotdir="${HOME}/.dotfiles"
+readonly DOTDIR="${HOME}/Documents/Dotfiles"
+readonly DOTDIR="${HOME}/.dotfiles"
+readonly PROGNAME=$(basename $0)
+readonly PROGDIR=$(readlink -m $(dirname $0))
+readonly ARGS="$@"
 
 info () {
   printf "  [ \033[00;34m..\033[0m ] $1\n"
@@ -25,7 +29,7 @@ fail () {
 }
 
 install_powerline() {
-  fontdir="${HOME}/.fonts/"
+  local fontdir="${HOME}/.fonts/"
 
   #FIXME: pip list missing
     #pip install list
@@ -59,8 +63,8 @@ install_powerline() {
 install_dotfiles () {
   info 'installing dotfiles'
 
-  for src in $(find "$dotdir" -maxdepth 2 -name '*.symlink'); do
-    dst="$HOME/.$(basename "${src%.*}")"
+  for src in $(find "${DOTDIR}" -maxdepth 2 -name '*.symlink'); do
+    local dst="${HOME}/.$(basename "${src%.*}")"
 
     if [[ -f "$dst" || -d "$dst" || -L "$dst" ]]; then
       rm -rf "$dst"
@@ -77,7 +81,7 @@ install_dotfiles () {
 install_antigen() {
   info 'installing antigen'
 
-  src="${dotdir}/antigen/antigen.zsh"
+  src="${DOTDIR}/antigen/antigen.zsh"
   if [[ -e ${src} ]]; then
     info "antigen present"
 
@@ -96,78 +100,82 @@ install_antigen() {
   fi
 }
 do_dotfilerepo() {
-  if [[ -d ${dotdir} ]]; then
-    cd ${dotdir}
+  if [[ -d ${DOTDIR} ]]; then
+    cd ${DOTDIR}
 
-    info "Updating ${dotdir}"
+    info "Updating ${DOTDIR}"
     git pull origin master \
-      || fail "Could not update the repository: ${dotdir}"
+      || fail "Could not update the repository: ${DOTDIR}"
 
     #update submodule
     cd antigen
     git submodule update --init --recursive
   else
-    info "Cloning ${dotdir}"
-    git clone --recursive https://github.com/camelinc/Dotfiles.git "${dotdir}" \
-      || fail "Could not clone the repository to ${dotdir}"
+    info "Cloning ${DOTDIR}"
+    git clone --recursive https://github.com/camelinc/Dotfiles.git "${DOTDIR}" \
+      || fail "Could not clone the repository to ${DOTDIR}"
   fi
 }
 
-do_dotfilerepo
-install_antigen
-install_dotfiles
-install_powerline
+main() {
+  do_dotfilerepo
+  install_antigen
+  install_dotfiles
+  install_powerline
 
-if [[ -e ${dotdir}/extra ]]; then
-  # Clone Dotfiles
-  source "${dotdir}/extra"
-fi
-
-
-# If we're on a Mac, let's install and setup homebrew.
-if [[ "$(uname -s)" == "Darwin" ]]; then
-  info "configuring OSX system"
-  if [[ -f osx ]]; then
-    if [[ $(source osx) ]]; then
-      success "OSX configured"
-    else
-      fail "error configuring OSX"
-    fi
+  if [[ -e ${DOTDIR}/extra ]]; then
+    # Clone Dotfiles
+    source "${DOTDIR}/extra"
   fi
 
-  if [[ ! -d "/usr/local/Cellar" ]]; then
-    info "installing Homebrew"
-    if [[ $(ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)") ]]; then
-      success "Tools successfully installed"
-    else
-      fail "error installing command-line tools"
+
+  # If we're on a Mac, let's install and setup homebrew.
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    info "configuring OSX system"
+    if [[ -f osx ]]; then
+      if [[ $(source osx) ]]; then
+        success "OSX configured"
+      else
+        fail "error configuring OSX"
+      fi
     fi
-  else
-    info "updating homebrew"
 
-    CMD="brew update"
-    eval "${CMD}"
-    CMD="brew doctor"
-    eval "${CMD}"
-  fi
-
-  info "installing command-line tools via Homebrew"
-  if [[ -f Brewfile ]]; then
-    if [[ $(brew bundle Brewfile) ]]; then
-      success "Tools successfully installed"
+    if [[ ! -d "/usr/local/Cellar" ]]; then
+      info "installing Homebrew"
+      if [[ $(ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)") ]]; then
+        success "Tools successfully installed"
+      else
+        fail "error installing command-line tools"
+      fi
     else
-      fail "error installing command-line tools"
-    fi
-  fi
+      info "updating homebrew"
 
-  info "installing GUI tools via Cask"
-  if [[ -f Brewfile ]]; then
-    if [[ $(brew bundle Caskfile) ]]; then
-      success "GUI tools successfully installed"
-    else
-      fail "error installing GUI tools"
+      CMD="brew update"
+      eval "${CMD}"
+      CMD="brew doctor"
+      eval "${CMD}"
     fi
-  fi
 
-fi
+    info "installing command-line tools via Homebrew"
+    if [[ -f Brewfile ]]; then
+      if [[ $(brew bundle Brewfile) ]]; then
+        success "Tools successfully installed"
+      else
+        fail "error installing command-line tools"
+      fi
+    fi
+
+    info "installing GUI tools via Cask"
+    if [[ -f Brewfile ]]; then
+      if [[ $(brew bundle Caskfile) ]]; then
+        success "GUI tools successfully installed"
+      else
+        fail "error installing GUI tools"
+      fi
+    fi
+
+  fi
+}
+
+main
 
