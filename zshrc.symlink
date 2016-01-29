@@ -70,3 +70,7 @@ fpath=(~/.zsh/completion $fpath)
 # compsys initialization
 
 export PATH="/usr/local/sbin:$PATH"
+
+if [ -e ~/.zprofile ];then
+  source ~/.zprofile
+fi

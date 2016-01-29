@@ -1,21 +1,22 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # http://blog.smalleycreative.com/tutorials/using-git-and-github-to-manage-your-dotfiles/
 # https://github.com/vqv/dotfiles/
 # http://www.kfirlavi.com/blog/2012/11/14/defensive-bash-programming
 
-readonly DOTDIR="${HOME}/Documents/Dotfiles"
+#readonly DOTDIR="${HOME}/Documents/Dotfiles"
 readonly DOTDIR="${HOME}/.dotfiles"
-readonly PROGNAME=$(basename $0)
-readonly PROGDIR=$(readlink -m $(dirname $0))
-readonly ARGS="$@"
+readonly PROGNAME=$(basename "$0")
+tmp=$(dirname "$0")
+readonly PROGDIR=$(readlink -m "${tmp}")
+readonly ARGS=( "$@" )
 
 info () {
-  printf "  [ \033[00;34m..\033[0m ] $1\n"
+  printf "  [ \033[00;34m..\033[0m ] %s\n" "$1"
 }
 
 user () {
-  printf "\r  [ \033[0;33m?\033[0m ] $1\n"
+  printf "\r  [ \033[0;33m?\033[0m ] %s\n" "$1"
 }
 
 success () {
@@ -35,7 +36,8 @@ install_powerline() {
     #pip install list
       #https://pip.pypa.io/en/latest/installing.html
 
-  if [[ -z $(pip list | grep powerline) ]]; then
+  if pip list | grep -q 'powerline'
+  then
     info 'installing powerline'
     pip install --user git+git://github.com/Lokaltog/powerline
   else
@@ -44,27 +46,38 @@ install_powerline() {
   fi
 
   if [[ ! -d ${fontdir} ]]; then
-    mkdir ${fontdir}
+    mkdir "${fontdir}"
   fi
-  cd ${fontdir}
+  cd "${fontdir}" \
+      || fail "Could not change into ${fontdir}"
 
   src="${HOME}/.fonts/powerline-fonts/"
   if [[ ! -d ${src} ]]; then
-    git clone https://github.com/Lokaltog/powerline-fonts.git ${src}
+    git clone https://github.com/Lokaltog/powerline-fonts.git "${src}"
   else
-    cd ${src}
+    cd "${src}" \
+      || fail "Could not change into ${src}"
     git pull
   fi
 
+
   info 'installing powerline-fonts'
-  sudo fc-cache -vf ${fontdir}
+  fcchache_bin=$(which fc-cache)
+  if [[ ! -x "${fcchache_bin}" ]]; then
+    info 'installing fontconfig'
+    sudo apt-get install -y fontconfig
+  fi
+
+  sudo "${fcchache_bin}" -vf "${fontdir}"  #FIXME: fc-cache installed?
 }
 
 install_dotfiles () {
   info 'installing dotfiles'
 
-  for src in $(find "${DOTDIR}" -maxdepth 2 -name '*.symlink'); do
-    local dst="${HOME}/.$(basename "${src%.*}")"
+  while IFS= read -r -d '' src
+  do
+    local dst
+    dst="${HOME}/.$(basename "${src%.*}")"
 
     if [[ -f "$dst" || -d "$dst" || -L "$dst" ]]; then
       rm -rf "$dst"
@@ -75,7 +88,7 @@ install_dotfiles () {
     eval "${CMD}" \
       || fail "Could not link ${src} to ${dst}"
     success "linked ${src} to ${dst}"
-  done
+  done <  <(find "${DOTDIR}" -maxdepth 2 -name '*.symlink' -print0)
 }
 
 install_antigen() {
@@ -92,7 +105,7 @@ install_antigen() {
     fi
 
     CMD="ln -s \"${src}\" \"${dst}\""
-    eval ${CMD} \
+    eval "${CMD}" \
       || fail "Could not link ${src} to ${dst}"
     success "linked ${src} to ${dst}"
   else
@@ -101,14 +114,16 @@ install_antigen() {
 }
 do_dotfilerepo() {
   if [[ -d ${DOTDIR} ]]; then
-    cd ${DOTDIR}
+    cd "${DOTDIR}" \
+      || fail "Could not change into ${DOTDIR}"
 
     info "Updating ${DOTDIR}"
     git pull origin master \
       || fail "Could not update the repository: ${DOTDIR}"
 
     #update submodule
-    cd antigen
+    cd antigen \
+      || fail "Could not change into 'antigen'"
     git submodule update --init --recursive
   else
     info "Cloning ${DOTDIR}"
@@ -118,13 +133,15 @@ do_dotfilerepo() {
 }
 
 main() {
+  sudo -v
+
   do_dotfilerepo
   install_antigen
   install_dotfiles
   install_powerline
 
   if [[ -e ${DOTDIR}/extra ]]; then
-    # Clone Dotfiles
+    # shellcheck disable=SC1090
     source "${DOTDIR}/extra"
   fi
 
@@ -132,8 +149,9 @@ main() {
   # If we're on a Mac, let's install and setup homebrew.
   if [[ "$(uname -s)" == "Darwin" ]]; then
     info "configuring OSX system"
-    if [[ -f osx ]]; then
-      if [[ $(source osx) ]]; then
+    if [[ -f ${DOTDIR}/osx ]]; then
+      # shellcheck source=./osx
+      if [[ $(source ${DOTDIR}/osx) ]]; then
         success "OSX configured"
       else
         fail "error configuring OSX"
