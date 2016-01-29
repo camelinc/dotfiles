@@ -36,8 +36,10 @@ install_powerline() {
     #pip install list
       #https://pip.pypa.io/en/latest/installing.html
 
-  if pip list | grep -q 'powerline'
-  then
+  # (IOError: broken pipe)[https://github.com/pypa/pip/issues/3263]
+  #if pip list | grep -q 'powerline'
+  # shellcheck disable=SC2143
+  if [[ -z $(pip list | grep powerline) ]]; then
     info 'installing powerline'
     pip install --user git+git://github.com/Lokaltog/powerline
   else
