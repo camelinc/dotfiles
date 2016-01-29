@@ -196,7 +196,9 @@ Plugin 'tpope/vim-fugitive'  "Git wrapper so awesome, it should be illegal
 Plugin 'airblade/vim-gitgutter.git'  "shows a git diff in the gutter (sign column) and stages/reverts hunks
 
 " Status Bar
-"Plugin 'bling/vim-airline'   "lean & mean status/tabline for vim that's light as air
+Plugin 'bling/vim-airline'   "lean & mean status/tabline for vim that's light as air
+let g:airline_powerline_fonts = 1 "Use nice powerline-fonts
+let g:airline_theme = 'dark' "solized theme
 
 "Bundle 'mileszs/ack.vim'  "Vim plugin for the Perl module / CLI script 'ack'
 
@@ -205,11 +207,6 @@ filetype plugin indent on
 " " }}}
 
 set guifont=Liberation\ Mono\ for\ Powerline
-
-"Powerline
-python from powerline.vim import setup as powerline_setup
-python powerline_setup()
-python del powerline_setup
 
 set laststatus=2 " Always display the statusline in all windows
 set showtabline=2 " Always display the tabline, even if there is only one tab

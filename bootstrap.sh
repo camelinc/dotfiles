@@ -67,10 +67,11 @@ install_powerline() {
   fcchache_bin=$(which fc-cache)
   if [[ ! -x "${fcchache_bin}" ]]; then
     info 'installing fontconfig'
-    sudo apt-get install -y fontconfig
+    sudo apt-get install -y fontconfig \
+      || fail "Could not install fontconfig"
   fi
 
-  sudo "${fcchache_bin}" -vf "${fontdir}"  #FIXME: fc-cache installed?
+  sudo "${fcchache_bin}" -vf "${fontdir}"
 }
 
 install_dotfiles () {
