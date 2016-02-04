@@ -152,7 +152,8 @@ Plugin 'VundleVim/Vundle.vim'
 " Design and Color schemes
 Plugin 'flazz/vim-colorschemes'
 if has("gui_running")
-  colorscheme zenburn
+  "colorscheme zenburn
+  colorscheme desert
 else
   colorscheme desert
 endif

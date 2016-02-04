@@ -36,11 +36,28 @@ unbind %
 set-window-option -g window-status-current-bg yellow
 
 #Mouse works as expected
-setw -g mode-mouse on
-#Pane Switching Using Mouse
-set -g mouse-select-pane on
-set -g mouse-resize-pane on
-set -g mouse-select-window on
+if-shell 'test $(tmux -V | cut -d" " -f2) != "2.1"' \
+    'setw -g mode-mouse on; set -g mouse-select-pane on; set -g mouse-resize-pane on; set -g mouse-select-window on'
+
+# Enable mouse pane selection and scrolling
+#  see https://github.com/tmux/tmux/issues/145#issuecomment-151123624
+# Better mouse scrolling in Tmux
+#  see http://www.davidverhasselt.com/better-mouse-scrolling-in-tmux/
+if-shell 'test $(tmux -V | cut -d" " -f2) = "2.1"' \
+    'set-option -g -q mouse on; set -g mouse-utf8 on; bind-key -T root PPage if-shell -F "#{alternate_on}" "send-keys PPage" "copy-mode -e; send-keys PPage"; bind-key -t vi-copy PPage page-up; bind-key -t vi-copy NPage page-down; bind-key -T root WheelUpPane if-shell -F -t = "#{alternate_on}" "send-keys -M" "select-pane -t =; copy-mode -e; send-keys -M"; bind-key -T root WheelDownPane if-shell -F -t = "#{alternate_on}" "send-keys -M" "select-pane -t =; send-keys -M"; bind-key -t vi-copy WheelUpPane halfpage-up; bind-key -t vi-copy WheelDownPane halfpage-down;'
+
+# see https://gitlab.com/gnachman/iterm2/issues/3950
+#set-option -g -q mouse on
+#bind-key -T root PPage if-shell -F "#{alternate_on}" "send-keys PPage" "copy-mode -e; send-keys PPage"
+#bind-key -t vi-copy PPage page-up
+#bind-key -t vi-copy NPage page-down
+#bind-key -T root WheelUpPane if-shell -F -t = "#{alternate_on}" "send-keys -M" "select-pane -t =; copy-mode -e; send-keys -M"
+#bind-key -T root WheelDownPane if-shell -F -t = "#{alternate_on}" "send-keys -M" "select-pane -t =; send-keys -M"
+#bind-key -t vi-copy WheelUpPane halfpage-up
+#bind-key -t vi-copy WheelDownPane halfpage-down
+
+# extend startup message popup time
+set-option -g display-time 4000
 
 # Pane resizing
 bind -r C-h resize-pane -L 5
@@ -52,8 +69,26 @@ bind -r C-l resize-pane -R 5
 set -g history-limit 10000
 
 #Powerline Tool
-#source "/Users/chrisi/Library/Python/2.7/lib/python/site-packages/powerline/bindings/tmux/powerline.conf"
-source "/usr/local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf"
+# pip install --user git+git://github.com/powerline/powerline
+if-shell 'test -f ~/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf' \
+    'source-file ~/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf'
+
+# [sudo] pip install git+git://github.com/powerline/powerline
+if-shell 'test -f /usr/local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf' \
+    'source-file /usr/local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf'
+
+# [sudo] pip install git+git://github.com/powerline/powerline
+if-shell 'test -f /usr/local/lib/python2.7/dist-packages/powerline/bindings/tmux/powerline.conf' \
+    'source-file /usr/local/lib/python2.7/dist-packages/powerline/bindings/tmux/powerline.conf'
+# using python3.3
+if-shell 'test -f /usr/local/lib/python3.3/dist-packages/powerline/bindings/tmux/powerline.conf' \
+    'source-file /usr/local/lib/python3.3/dist-packages/powerline/bindings/tmux/powerline.conf'
+# python 3.4?
+if-shell 'test -f /usr/local/lib/python3.4/dist-packages/powerline/bindings/tmux/powerline.conf' \
+    'source-file /usr/local/lib/python3.4/dist-packages/powerline/bindings/tmux/powerline.conf'
+# Mac - pip install --user git+git://github.com/powerline/powerline
+if-shell '[[ $(uname) == "Darwin" ]]' \
+    'source-file ~/Library/Python/2.7/lib/python/site-packages/powerline/bindings/tmux/powerline.conf'
 
 bind B source-file ~/.tmux/bar
 
@@ -74,3 +109,4 @@ set -g @plugin 'tmux-plugins/tmux-continuum'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
+

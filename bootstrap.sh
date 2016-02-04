@@ -207,6 +207,9 @@ main() {
   sudo -v \
     || fail "error configuring OSX"
   
+  #TODO: check for required binaries
+  sudo apt-get install -y git-core python-pip
+
   do_dotfilerepo
   install_antigen
   install_dotfiles
