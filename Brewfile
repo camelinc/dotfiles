@@ -1,46 +1,85 @@
-# Install command-line tools using Homebrew
-# Usage: `brew bundle Brewfile`
+tap "homebrew/bundle"
 
-# Make sure we’re using the latest Homebrew
-update
-
-# Upgrade any already-installed formulae
-upgrade
-
+tap "homebrew/core"
 # Install GNU core utilities (those that come with OS X are outdated)
 # Don’t forget to add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH`.
-install coreutils
+brew "coreutils"
+brew "binutils"
 # Install some other useful utilities like `sponge`
-install moreutils
+brew "moreutils"
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed
-install findutils
+brew "findutils"
 # Install GNU `sed`, overwriting the built-in `sed`
-install gnu-sed --default-names
-# Install Bash 4
-# Note: don’t forget to add `/usr/local/bin/bash` to `/etc/shells` before running `chsh`.
-install bash
-install bash-completion
+brew "gnu-sed", args: ["--default-names"]
+#
+brew "diffutils"
+brew "ed", args: ["with-default-names"]
+brew "python"
+brew "file-formula"
+brew "findutils", args: ["with-default-names"]
+brew "fontconfig"
+brew "gawk"
+brew "git"
+brew "gnu-indent", args: ["with-default-names"]
+brew "gnu-sed", args: ["with-default-names"]
+brew "gnu-tar", args: ["with-default-names"]
+brew "gnu-which", args: ["with-default-names"]
+brew "gnutls"
+brew "grep", args: ["with-default-names"]
+brew "gzip"
+brew "nmap"
+brew "openssh"
+brew "rsync"
+brew "screen"
+brew "tmux"
+brew "unzip"
+brew "p7zip"
+brew "vim", args: ["with-override-system-vi"]
+brew "watch"
+brew "wdiff", args: ["with-gettext"]
+brew "wget"
+brew "zsh"
+brew 'zsh-completions'
 
-# Install wget with IRI support
-install wget --enable-iri
+# Powerline Fonts
+tap "caskroom/fonts"
+cask "font-hack-nerd-font"
 
-# Install RingoJS and Narwhal
-# Note that the order in which these are installed is important; see http://git.io/brew-narwhal-ringo.
-install ringojs
-install narwhal
+# Cask
+tap "caskroom/cask"
+cask "osxfuse"
+cask "macvim"
+cask "dropbox"
+cask "firefox"
+cask "google-chrome"
+cask "google-chrome-canary"
+cask "gpgtools"
+#cask  "imagealpha"
+#cask  "imageoptim"
+cask "iterm2"
+cask "keepassxc"
+cask "macvim"
+cask "miro-video-converter"
+#cask  "opera"
+#cask  "opera-developer"
+#cask  "opera-next"
+#cask  "sublime-text"
+#cask  "the-unarchiver"
+#cask  "torbrowser"
+#cask  "transmission"
+cask  "tunnelblick"
+#cask  "ukelele"
+cask  "virtualbox"
+cask 'virtualbox-extension-pack'
+cask  "vlc"
 
-# Install more recent versions of some OS X tools
-install vim --override-system-vi
 
-# Install other useful binaries
-install foremost
-install git
-install imagemagick --with-webp
-install nmap
-install p7zip
-install sshfs
-install tmux
-install webkit2png
+# App Store integration
+brew 'mas'
 
-# Remove outdated versions from the cellar
-cleanup
+# Install Mac App Store apps
+# mas '1Password', id: 443987910
+mas zoiper
+
+# Needs cask osxfuse
+brew "sshfs"

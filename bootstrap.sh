@@ -62,8 +62,6 @@ ask () {
         esac
     done
 }
-
-
 install_powerline() {
   local fontdir="${HOME}/.fonts/"
 
@@ -76,10 +74,14 @@ install_powerline() {
   # shellcheck disable=SC2143
   if [[ -z $(pip list | grep powerline) ]]; then
     info 'installing powerline'
-    pip install --quiet --user git+git://github.com/Lokaltog/powerline
+    #pip install --quiet --user git+git://github.com/powerline/powerline
+    pip install --user powerline-status
+
   else
     info 'updating powerline'
-    pip install --quiet --user --upgrade git+git://github.com/Lokaltog/powerline
+    #pip install --quiet --user --upgrade git+git://github.com/powerline/powerline
+    pip install --user --upgrade powerline-status
+
   fi
 
   if [[ ! -d ${fontdir} ]]; then
@@ -176,6 +178,27 @@ install_antigen() {
     fail "Antigen repository missing: ${src}"
   fi
 }
+prepare_tmux() {
+  info 'preparing tmux'
+
+  src="https://github.com/tmux-plugins/tpm"
+  dst="~/.tmux/plugins/tpm"
+  if [[ -e ${dst} ]]; then
+    info "Tmux Plugin Manager present"
+
+    CMD="cd \"${dst}\" && git pull"
+    eval "${CMD}" \
+      || fail "Could not update ${dst} from ${src}"
+    success "linked ${dst} from ${src}"
+  else
+    info 'Cloning Tmux Plugin Manager'
+
+    CMD="git clone ${src} \"${dst}\""
+    eval "${CMD}" \
+      || fail "Could not clone ${src} into ${dst}"
+    fail ": ${src}"
+  fi
+}
 do_dotfilerepo() {
   if [[ -d ${DOTDIR} ]]; then
     cd "${DOTDIR}" \
@@ -202,28 +225,7 @@ do_dotfilerepo() {
       || fail "Could not clone submodules in ${DOTDIR}"
   fi
 }
-
-main() {
-  sudo -v \
-    || fail "error configuring OSX"
-  
-  #TODO: check for required binaries
-  sudo apt-get install -y git-core python-pip
-
-  do_dotfilerepo
-  install_antigen
-  install_dotfiles
-  install_powerline
-
-  if ask "Install GDB Peda?" N; then
-    install_peda
-	fi;
-
-  if [[ -e ${DOTDIR}/extra ]]; then
-    # shellcheck disable=SC1090
-    source "${DOTDIR}/extra"
-  fi
-
+setup_macos() {
   # If we're on a Mac, let's install and setup homebrew.
   if [[ "$(uname -s)" == "Darwin" ]]; then
     info "configuring OSX system"
@@ -242,12 +244,12 @@ main() {
     if [[ ! -d "/usr/local/Cellar" ]]; then
       info "installing Homebrew"
       if [[ $(ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)") ]]; then
-        success "Tools successfully installed"
+        success "Homebrew successfully installed"
       else
         fail "error installing command-line tools"
       fi
     else
-      info "updating homebrew"
+      info "Updating Homebrew"
 
       CMD="brew update"
       eval "${CMD}"
@@ -257,23 +259,52 @@ main() {
 
     info "installing command-line tools via Homebrew"
     if [[ -f Brewfile ]]; then
-      if [[ $(brew bundle Brewfile) ]]; then
+      if [[ $(brew bundle --file=Brewfile) ]]; then
         success "Tools successfully installed"
       else
         fail "error installing command-line tools"
       fi
     fi
-
-    info "installing GUI tools via Cask"
-    if [[ -f Brewfile ]]; then
-      if [[ $(brew bundle Caskfile) ]]; then
-        success "GUI tools successfully installed"
-      else
-        fail "error installing GUI tools"
-      fi
-    fi
-    
   fi
+}
+setup_linux() {
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    info "Configuring Linux system"
+
+    #TODO: check flavor
+    sudo apt install -y git-core python-pip
+  fi
+}
+setup() {
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    setup_macos
+  elif [[ "$(uname -s)" == "Linux" ]]; then
+    setup_linux
+  fi
+}
+main() {
+  sudo -v \
+    || fail "error configuring OSX"
+  
+  # Generic setup
+  setup
+
+  # Customization
+  do_dotfilerepo
+  install_antigen
+  install_dotfiles
+  install_powerline
+
+  if ask "Install GDB Peda?" N; then
+    install_peda
+	fi;
+
+  if [[ -e ${DOTDIR}/extra ]]; then
+    # shellcheck disable=SC1090
+    source "${DOTDIR}/extra"
+  fi
+
+
 }
 
 main

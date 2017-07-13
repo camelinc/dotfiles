@@ -1,19 +1,13 @@
 # Load Antigen
 source ~/.antigen.zsh
 
-# Load various lib files
-antigen bundle robbyrussell/oh-my-zsh lib/
+# Load the oh-my-zsh's library
+antigen use oh-my-zsh
 
-#
-# Antigen Theme
-#
-
+# Load the theme
 antigen theme ys
 
-#
 # Antigen Bundles
-#
-
 antigen bundle git
 antigen bundle tmuxinator
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -35,11 +29,13 @@ antigen bundle python
 antigen bundle virtualenv
 
 # OS specific plugins
-if [[ $CURRENT_OS == 'OS X' ]]; then
-    antigen bundle brew
-    antigen bundle brew-cask
+if [[ $CURRENT_OS == 'OS X' || $(uname -s) == 'Darwin' ]]; then
+#    antigen bundle brew
+#    antigen bundle brew-cask
     antigen bundle gem
     antigen bundle osx
+
+    export PATH="$HOME/Library/Python/2.7/bin:$PATH"
 elif [[ $CURRENT_OS == 'Linux' ]]; then
     # None so far...
 

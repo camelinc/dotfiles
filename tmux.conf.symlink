@@ -87,7 +87,7 @@ if-shell 'test -f /usr/local/lib/python3.3/dist-packages/powerline/bindings/tmux
 if-shell 'test -f /usr/local/lib/python3.4/dist-packages/powerline/bindings/tmux/powerline.conf' \
     'source-file /usr/local/lib/python3.4/dist-packages/powerline/bindings/tmux/powerline.conf'
 # Mac - pip install --user git+git://github.com/powerline/powerline
-if-shell '[[ $(uname) == "Darwin" ]]' \
+if-shell '[[ $(uname -s) == "Darwin" ]]' \
     'source-file ~/Library/Python/2.7/lib/python/site-packages/powerline/bindings/tmux/powerline.conf'
 
 bind B source-file ~/.tmux/bar
