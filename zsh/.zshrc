@@ -5,7 +5,7 @@ source ~/.antigen.git/antigen.zsh
 antigen use oh-my-zsh
 
 # Load the theme
-antigen theme agnoster
+antigen theme ys
 
 # Antigen Bundles
 antigen bundle git
@@ -61,7 +61,7 @@ fi
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
 
 # Use the three identities
-zstyle :omz:plugins:ssh-agent identities github pyrite arrakis
+zstyle :omz:plugins:ssh-agent identities github id_ed25519_private_2016-05-02 id_rsa_private_2016-05-15 id_ed25519_work_2016-11-02
 
 antigen apply
 
