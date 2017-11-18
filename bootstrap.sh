@@ -160,23 +160,24 @@ install_dotfiles () {
 install_antigen() {
   info 'installing antigen'
 
-  src="${DOTDIR}/antigen/antigen.zsh"
-  if [[ -e ${src} ]]; then
+  src="https://github.com/zsh-users/antigen.git"
+  dst="~/.antigen.git"
+  if [[ -e ${dst} ]]; then
     info "antigen present"
 
-    dst="$HOME/.antigen.zsh"
-    if [[ -f "$dst" || -d "$dst" || -L "$dst" ]]; then
-      rm -rf "$dst"
-      success "removed $dst"
-    fi
-
-    CMD="ln -s \"${src}\" \"${dst}\""
+    CMD="cd \"${dst}\" && git pull"
     eval "${CMD}" \
-      || fail "Could not link ${src} to ${dst}"
-    success "linked ${src} to ${dst}"
+      || fail "Could not update ${dst} from ${src}"
+    success "updated ${dst} from ${src}"
   else
-    fail "Antigen repository missing: ${src}"
+    info 'Cloning Antigen'
+
+    CMD="git clone ${src} \"${dst}\""
+    eval "${CMD}" \
+      || fail "Could not clone ${src} into ${dst}"
+    fail ": ${src}"
   fi
+
 }
 prepare_tmux() {
   info 'preparing tmux'

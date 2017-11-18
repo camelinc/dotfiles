@@ -1,16 +1,21 @@
 # Load Antigen
-source ~/.antigen.zsh
+source ~/.antigen.git/antigen.zsh
 
 # Load the oh-my-zsh's library
 antigen use oh-my-zsh
 
 # Load the theme
-antigen theme ys
+antigen theme agnoster
 
 # Antigen Bundles
 antigen bundle git
 antigen bundle tmuxinator
+# Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
+# Fish-like auto suggestions
+antigen bundle zsh-users/zsh-autosuggestions
+# Extra zsh completions
+antigen bundle zsh-users/zsh-completions
 #antigen bundle rupa/z
 antigen bundle tmux
 antigen bundle sudo
@@ -18,7 +23,7 @@ antigen bundle sudo
 antigen bundle kennethreitz/autoenv
 
 # For SSH, starting ssh-agent is annoying
-#antigen bundle ssh-agent
+antigen bundle ssh-agent
 
 #virtualbox
 antigen bundle zsh-users/zsh-completions

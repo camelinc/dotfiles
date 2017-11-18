@@ -132,22 +132,16 @@ endif
 
 " Scripts and Plugins " {{{
 filetype off  " must be off before Vundle has run
-
-if !isdirectory(expand("~/.vim/bundle/Vundle.vim/.git"))
-    echo "Installing Vundle.."
-    echo ""
-    silent !mkdir -p ~/.vim/bundle
-    silent !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+" Load vim-plug
+if empty(glob("~/.vim/autoload/plug.vim"))
+    execute '!curl -fLo ~/.vim/autoload/plug.vim https://raw.github.com/junegunn/vim-plug/master/plug.vim'
 endif
 
-set rtp+=~/.vim/bundle/Vundle.vim
+call plug#begin('~/.vim/plugged')
 
-call vundle#begin()
-
-Plugin 'VundleVim/Vundle.vim'
 
 " Design and Color schemes
-Plugin 'flazz/vim-colorschemes'
+Plug 'flazz/vim-colorschemes'
 if has("gui_running")
   "colorscheme zenburn
   colorscheme desert
@@ -155,54 +149,54 @@ else
   colorscheme desert
 endif
 
-Plugin 'nathanaelkane/vim-indent-guides'  "visually displaying indent levels in code
+Plug 'nathanaelkane/vim-indent-guides'  "visually displaying indent levels in code
 
 " Syntax checker
-Plugin 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic'
 let g:syntastic_python_checkers=['flake8','python']
 let g:syntastic_python_checker_args='--ignore=E501,E225'
 
 " Syntax highlight
-Plugin 'gmarik/vim-markdown'
-Plugin 'timcharper/textile.vim'
-Plugin 'fatih/vim-go'
+Plug 'gmarik/vim-markdown'
+Plug 'timcharper/textile.vim'
+Plug 'fatih/vim-go'
 
 " Files
-Plugin 'Xuyuanp/git-nerdtree'  "NERDTree with git status support
+Plug 'Xuyuanp/git-nerdtree'  "NERDTree with git status support
 
 " Utility
-Plugin 'tmux-plugins/vim-tmux-focus-events' "This plugin restores them when using vim inside Tmux.
-Plugin 'gmarik/sudo-gui.vim' "sudo GUI for a GUI vim
-Plugin 'vim-scripts/lastpos.vim'  "Last position jump improved for Easy Vim
-Plugin 'sjl/gundo.vim.git'  "Graph vim undo tree in style
-"Plugin 'wincent/Command-T.git'  "extremely fast, intuitive mechanism for opening files and buffers with a minimal number of keystrokes
-Plugin 'tpope/vim-surround'  "quoting/parenthesizing made simple
+Plug 'tmux-plugins/vim-tmux-focus-events' "This plugin restores them when using vim inside Tmux.
+Plug 'gmarik/sudo-gui.vim' "sudo GUI for a GUI vim
+Plug 'vim-scripts/lastpos.vim'  "Last position jump improved for Easy Vim
+Plug 'sjl/gundo.vim'  "Graph vim undo tree in style
+"Plug 'wincent/Command-T'  "extremely fast, intuitive mechanism for opening files and buffers with a minimal number of keystrokes
+Plug 'tpope/vim-surround'  "quoting/parenthesizing made simple
 
 " Python
-" Plugin 'vim-scripts/pep8'  "Check your python source files with PEP8
+" Plug 'vim-scripts/pep8'  "Check your python source files with PEP8
 
 " Productivity
-Plugin 'vim-scripts/TaskList.vim'  "Eclipse like task list
+Plug 'vim-scripts/TaskList.vim'  "Eclipse like task list
 "nnoremap <leader>t <Plug>TaskList
 let mapleader = "."
 
 " Foo
-Plugin 'mhinz/vim-startify.git'   "fancy start screen for Vim.
+Plug 'mhinz/vim-startify'   "fancy start screen for Vim.
 
 " Git integration
-Plugin 'tpope/vim-fugitive'  "Git wrapper so awesome, it should be illegal
-Plugin 'airblade/vim-gitgutter.git'  "shows a git diff in the gutter (sign column) and stages/reverts hunks
+Plug 'tpope/vim-fugitive'  "Git wrapper so awesome, it should be illegal
+Plug 'airblade/vim-gitgutter'  "shows a git diff in the gutter (sign column) and stages/reverts hunks
 
 " Status Bar
-Plugin 'bling/vim-airline'   "lean & mean status/tabline for vim that's light as air
+Plug 'bling/vim-airline'   "lean & mean status/tabline for vim that's light as air
 let g:airline_powerline_fonts = 1 "Use nice powerline-fonts
 let g:airline_theme = 'dark' "solized theme
 
 "Bundle 'mileszs/ack.vim'  "Vim plugin for the Perl module / CLI script 'ack'
 
 " All of your Plugins must be added before the following line
-call vundle#end()            " required
 filetype plugin indent on    " required
+call plug#end()
 
 "set guifont=Liberation\ Mono\ Powerline\ Nerd\ Font\ Complete:h12
 "set guifont=Liberation\ Mono\ Powerline\ Nerd\ Font\ Complete:h12
