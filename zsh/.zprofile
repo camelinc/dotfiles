@@ -1,3 +1,13 @@
 
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
+export GTK_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULE=ibus
+
+export GEMPATH=${HOME}/.gem/ruby/2.4.0/bin
+export PATH=$PATH:$GEMPATH
+#export LC_ALL=C
+
+source ${HOME}/.ssh-agent-setup.sh
+
