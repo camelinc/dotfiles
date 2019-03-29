@@ -138,13 +138,12 @@ install_dotfiles () {
     || fail "Could not change into ${DOTDIR}"
 
   stow="/usr/bin/stow"
-  while IFS= read -r -d '' src
-  do
-    CMD="${stow} -d "\"${DOTDIR}\"" -t \"${HOME}\" -R \"${src}\" "
-    eval "${CMD}" \
-      || fail "Could not stow ${src}"
-    success "Stowed ${src} with \"$?\""
-  done <  <(find "${DOTDIR}" -maxdepth 1 -type d -name "[!.]*" -printf "%f\0")
+  #src="-R curl -R git -R ssh -R tmux -R vim -R wget -R zsh"
+  src="-R curl -R git -R tmux -R vim -R wget -R zsh"
+  CMD="${stow} -d "\"${DOTDIR}\"" -t \"${HOME}\" ${src}"
+  eval "${CMD}" \
+    || fail "Could not stow"
+  success "Stowed"
 }
 
 install_antigen() {
