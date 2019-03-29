@@ -1,7 +1,9 @@
 " set guifont=Monospace
 "set guifont=Liberation\ Mono\ Powerline
 "set guifont=Liberation\ Mono\ for\ Powerline
-set guifont=Liberation\ Mono\ Powerline\ Nerd\ Font\ Complete:h12
+"set guifont=Liberation\ Mono\ Powerline\ Nerd\ Font\ Complete:h12
+
+set guifont=Andale\ Mono
 
 " Load the MacVim color scheme.  This can be disabled by loading another color
 " scheme with the :colorscheme command, or by adding the line

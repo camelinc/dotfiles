@@ -109,13 +109,14 @@ endif
 
 if has('gui_running')
   set guioptions-=T  " no toolbar
+  set guifont=Andale\ Mono
   "set guioptions=cMg " console dialogs, do not show menu and toolbar
 
   "if has('mac')
   if has('gui_macvim')
     "set guifont=Andale\ Mono:h13
     "set guifont=Liberation\ Mono\ for\ Powerline
-    set guifont=Liberation\ Mono\ Powerline\ Nerd\ Font\ Complete:h12
+    set guifont=Liberation\ Mono\ Powerline\ Nerd\ Font\ Complete
 
     set noantialias
     set fuoptions=maxvert,maxhorz ",background:#00AAaaaa
@@ -165,7 +166,7 @@ Plug 'fatih/vim-go'
 Plug 'Xuyuanp/git-nerdtree'  "NERDTree with git status support
 
 " Utility
-Plug 'tmux-plugins/vim-tmux-focus-events' "This plugin restores them when using vim inside Tmux.
+Plug 'tmux-plugins/vim-tmux-focus-events' "This Plug restores them when using vim inside Tmux.
 Plug 'gmarik/sudo-gui.vim' "sudo GUI for a GUI vim
 Plug 'vim-scripts/lastpos.vim'  "Last position jump improved for Easy Vim
 Plug 'sjl/gundo.vim'  "Graph vim undo tree in style
@@ -192,7 +193,7 @@ Plug 'bling/vim-airline'   "lean & mean status/tabline for vim that's light as a
 let g:airline_powerline_fonts = 1 "Use nice powerline-fonts
 let g:airline_theme = 'dark' "solized theme
 
-"Bundle 'mileszs/ack.vim'  "Vim plugin for the Perl module / CLI script 'ack'
+"Bundle 'mileszs/ack.vim'  "Vim Plug for the Perl module / CLI script 'ack'
 
 " All of your Plugins must be added before the following line
 filetype plugin indent on    " required
@@ -201,6 +202,7 @@ call plug#end()
 "set guifont=Liberation\ Mono\ Powerline\ Nerd\ Font\ Complete:h12
 "set guifont=Liberation\ Mono\ Powerline\ Nerd\ Font\ Complete:h12
 "set guifont=Knack\ Regular\ Nerd\ Font:h12
+set guifont=Andale\ Mono
 
 set laststatus=2 " Always display the statusline in all windows
 set showtabline=2 " Always display the tabline, even if there is only one tab

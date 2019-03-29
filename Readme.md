@@ -8,13 +8,13 @@ This is a repo of my dot files
 
 ## Automatic
 
-``wget --no-check-certificate https://raw.githubusercontent.com/camelinc/dotfiles/master/bootstrap.sh -O - | bash``
+``wget https://raw.githubusercontent.com/camelinc/dotfiles/master/bootstrap.sh -O - | bash``
 
 # Todo
 * [ ] include rsync global config
 * [ ] include unison configuration ?
 * [ ] include .gdbinit
-
+* [ ] Automatic stow upon update
 
 # Problems
 

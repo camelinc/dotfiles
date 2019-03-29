@@ -1,3 +1,18 @@
+#
+# ~/.zsh
+#
+
+alias vpnon='systemctl start openvpn-client@air.service'
+alias vpnoff='systemctl stop openvpn-client@air.service'
+alias steam="LD_PRELOAD='/usr/lib/libstdc++.so.6 /usr/lib/libgcc_s.so.1 /usr/lib/libxcb.so.1 /usr/lib/libgpg-error.so' /usr/bin/steam"
+
+# Golang Path
+export GOPATH=${HOME}/go
+export PATH=$PATH:$GOPATH/bin
+
+# Rust Path
+export PATH=$PATH:${HOME}/.cargo/bin
+
 # Load Antigen
 source ~/.antigen.git/antigen.zsh
 

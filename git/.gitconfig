@@ -13,6 +13,7 @@
 	# More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
 	trustctime = false
 	autocrlf = input
+	editor = vim
 
 [color]
 	# Use colors in Git commands that are capable of colored output when
@@ -25,6 +26,3 @@
 [include]
   path = ~/.gitconfig.local
 
-[user]
-	name = camelinc
-	email = camelinc@users.noreply.github.com

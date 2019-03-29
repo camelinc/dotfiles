@@ -133,35 +133,25 @@ install_peda() {
 }
 install_dotfiles () {
   info 'installing dotfiles'
+  
+  cd "${DOTDIR}" \
+    || fail "Could not change into ${DOTDIR}"
 
+  stow="/usr/bin/stow"
   while IFS= read -r -d '' src
   do
-    local dst
-    dst="${HOME}/.$(basename "${src%.*}")"
-
-    if [[ -f "$dst" || -d "$dst" ]]; then
-      if [[ ! -L "$dst" ]] && \
-        (ask "Delete $dst?" N);
-      then
-          continue
-      fi
-
-      rm -rf "$dst"
-      success "removed $dst"
-    fi
-
-    CMD="ln -s \"${src}\" \"${dst}\""
+    CMD="${stow} -d "\"${DOTDIR}\"" -t \"${HOME}\" -R \"${src}\" "
     eval "${CMD}" \
-      || fail "Could not link ${src} to ${dst}"
-    success "linked ${src} to ${dst}"
-  done <  <(find "${DOTDIR}" -maxdepth 2 -name '*.symlink' -print0)
+      || fail "Could not stow ${src}"
+    success "Stowed ${src} with \"$?\""
+  done <  <(find "${DOTDIR}" -maxdepth 1 -type d -name "[!.]*" -printf "%f\0")
 }
 
 install_antigen() {
   info 'installing antigen'
 
   src="https://github.com/zsh-users/antigen.git"
-  dst="~/.antigen.git"
+  dst="${HOME}/.antigen.git"
   if [[ -e ${dst} ]]; then
     info "antigen present"
 
@@ -175,7 +165,7 @@ install_antigen() {
     CMD="git clone ${src} \"${dst}\""
     eval "${CMD}" \
       || fail "Could not clone ${src} into ${dst}"
-    fail ": ${src}"
+    success ": ${src}"
   fi
 
 }
@@ -209,21 +199,12 @@ do_dotfilerepo() {
     git pull origin master --quiet \
       || fail "Could not update the repository: ${DOTDIR}"
 
-    #update submodule
-    cd antigen \
-      || fail "Could not change into 'antigen'"
-    git submodule update --quiet --init --recursive
   else
     info "Cloning ${DOTDIR}"
     # Quiet option not respected for submodules
     #git clone --quiet --recursive https://github.com/camelinc/Dotfiles.git "${DOTDIR}" \
     git clone --quiet https://github.com/camelinc/Dotfiles.git "${DOTDIR}" \
       || fail "Could not clone the repository to ${DOTDIR}"
-
-    cd "${DOTDIR}" \
-      || fail "Could not change into ${DOTDIR}"
-    git submodule update --quiet --init --recursive \
-      || fail "Could not clone submodules in ${DOTDIR}"
   fi
 }
 setup_macos() {
@@ -268,12 +249,44 @@ setup_macos() {
     fi
   fi
 }
+get_flavour() {
+  #see https://unix.stackexchange.com/questions/6345/how-can-i-get-distribution-name-and-version-number-in-a-simple-shell-script
+  if [ -f /etc/os-release ]; then
+    # freedesktop.org and systemd
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+  elif type lsb_release >/dev/null 2>&1; then
+    # linuxbase.org
+    OS=$(lsb_release -si)
+    VER=$(lsb_release -sr)
+  elif [ -f /etc/lsb-release ]; then
+    # For some versions of Debian/Ubuntu without lsb_release command
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
+  else
+    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+    OS=$(uname -s)
+    VER=$(uname -r)
+  fi
+  echo "${OS}  ${VER}"
+}
 setup_linux() {
   if [[ "$(uname -s)" == "Linux" ]]; then
     info "Configuring Linux system"
 
-    #TODO: check flavor
-    sudo apt install -y git-core python-pip
+    # check flavor
+    get_flavour
+    if [[ "${OS}" == "Ubuntu" ]]; then
+      info "Configuring Ubuntu"
+      sudo apt install -y git-core python-pip
+    elif [[ "${OS}" == "Manjaro Linux" ]]; then
+      info "Configuring Manjara"
+      sudo pacman -S --quiet --noconfirm git python-pip
+    else
+      error "Flavour not found ${OS}"
+    fi
   fi
 }
 setup() {
@@ -294,11 +307,14 @@ main() {
   do_dotfilerepo
   install_antigen
   install_dotfiles
-  install_powerline
+
+  if ask "Install Powerline?" N; then
+    install_powerline
+  fi;
 
   if ask "Install GDB Peda?" N; then
     install_peda
-	fi;
+  fi;
 
   if [[ -e ${DOTDIR}/extra ]]; then
     # shellcheck disable=SC1090
