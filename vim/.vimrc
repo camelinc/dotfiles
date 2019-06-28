@@ -160,7 +160,10 @@ let g:syntastic_python_checker_args='--ignore=E501,E225'
 " Syntax highlight
 Plug 'gmarik/vim-markdown'
 Plug 'timcharper/textile.vim'
+
+" Golang
 Plug 'fatih/vim-go'
+
 
 " Files
 Plug 'Xuyuanp/git-nerdtree'  "NERDTree with git status support
