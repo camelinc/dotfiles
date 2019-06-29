@@ -300,11 +300,15 @@ main() {
     || fail "error configuring OSX"
   
   # Generic setup
+  #Managed via Ansible
   setup
 
   # Customization
+  #Managed via Ansible
   do_dotfilerepo
+  #Managed via Ansible
   install_antigen
+  #Managed via Ansible
   install_dotfiles
 
   if ask "Install Powerline?" N; then
