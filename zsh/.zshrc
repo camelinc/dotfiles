@@ -20,7 +20,11 @@ source ~/.antigen.git/antigen.zsh
 antigen use oh-my-zsh
 
 # Load the theme
-antigen theme ys
+#antigen theme ys
+
+#POWERLEVEL9K_INSTALLATION_PATH=$ANTIGEN_BUNDLES/bhilburn/powerlevel9k
+#antigen theme bhilburn/powerlevel9k powerlevel9k
+antigen theme romkatv/powerlevel10k
 
 # Antigen Bundles
 antigen bundle git
@@ -41,7 +45,6 @@ antigen bundle kennethreitz/autoenv
 antigen bundle ssh-agent
 
 #virtualbox
-antigen bundle zsh-users/zsh-completions
 
 # Python Plugins
 antigen bundle pip
@@ -91,3 +94,6 @@ export PATH="/usr/local/sbin:$PATH"
 if [ -e ~/.zprofile ];then
   source ~/.zprofile
 fi
+neofetch
+echo -en "\n"
+
