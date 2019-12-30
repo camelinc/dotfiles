@@ -29,6 +29,11 @@ antigen use oh-my-zsh
 # Load the theme
 #antigen theme ys
 
+#History setup
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=100000
+SAVEHIST=$HISTSIZ
+
 #POWERLEVEL9K_INSTALLATION_PATH=$ANTIGEN_BUNDLES/bhilburn/powerlevel9k
 #antigen theme bhilburn/powerlevel9k powerlevel9k
 antigen theme romkatv/powerlevel10k
@@ -51,6 +56,8 @@ antigen bundle kennethreitz/autoenv
 # For SSH, starting ssh-agent is annoying
 antigen bundle ssh-agent
 
+#antigen bundle zpm-zsh/title
+antigen bundle jreese/zsh-titles
 #virtualbox
 
 # Python Plugins
@@ -86,8 +93,7 @@ fi
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
 
 # Use the three identities
-#zstyle :omz:plugins:ssh-agent identities github id_ed25519_private_2016-05-02 id_rsa_private_2016-05-15 id_ed25519_work_2016-11-02
-zstyle :omz:plugins:ssh-agent identities id_ed25519_private_2016-05-02 id_rsa_private_2016-05-15 id_ed25519_work_2016-11-02
+#zstyle :omz:plugins:ssh-agent identities github 
 
 antigen apply
 
@@ -106,3 +112,4 @@ echo -en "\n"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
