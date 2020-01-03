@@ -9,5 +9,7 @@ export GEMPATH=${HOME}/.gem/ruby/2.6.0/bin
 export PATH=$PATH:$GEMPATH
 #export LC_ALL=C
 
-source ${HOME}/.ssh-agent-setup.sh
+#if [ -e ${HOME}/.ssh-agent-setup.sh ];then
+#  source ${HOME}/.ssh-agent-setup.sh
+#fi
 

@@ -64,6 +64,8 @@ elif [[ $CURRENT_OS == 'Linux' ]]; then
 
     if [[ $DISTRO == 'Debian' ]]; then
         antigen bundle debian
+    elif [[ $DISTRO == 'Arch' ]]; then
+        export TESTVAR="We are on ArchLinux"
     fi
 elif [[ $CURRENT_OS == 'Cygwin' ]]; then
     antigen bundle cygwin
@@ -76,11 +78,10 @@ fi
 #
 
 # Turn on agent forwarding
-zstyle :omz:plugins:ssh-agent agent-forwarding yes
+#zstyle :omz:plugins:ssh-agent agent-forwarding yes
 
-# Use the three identities
-#zstyle :omz:plugins:ssh-agent identities github id_ed25519_private_2016-05-02 id_rsa_private_2016-05-15 id_ed25519_work_2016-11-02
-zstyle :omz:plugins:ssh-agent identities id_ed25519_private_2016-05-02 id_rsa_private_2016-05-15 id_ed25519_work_2016-11-02
+# Use the following identities
+#zstyle :omz:plugins:ssh-agent identities github 
 
 antigen apply
 
@@ -91,9 +92,14 @@ fpath=(~/.zsh/completion $fpath)
 
 export PATH="/usr/local/sbin:$PATH"
 
-if [ -e ~/.zprofile ];then
-  source ~/.zprofile
-fi
 neofetch
 echo -en "\n"
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+
+if [ -e ~/.zprofile ];then
+  source ~/.zprofile
+fi
