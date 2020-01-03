@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block, everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 #
 # ~/.zsh
 #
@@ -22,6 +29,11 @@ antigen use oh-my-zsh
 # Load the theme
 #antigen theme ys
 
+#History setup
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=100000
+SAVEHIST=$HISTSIZ
+
 #POWERLEVEL9K_INSTALLATION_PATH=$ANTIGEN_BUNDLES/bhilburn/powerlevel9k
 #antigen theme bhilburn/powerlevel9k powerlevel9k
 antigen theme romkatv/powerlevel10k
@@ -44,6 +56,8 @@ antigen bundle kennethreitz/autoenv
 # For SSH, starting ssh-agent is annoying
 antigen bundle ssh-agent
 
+#antigen bundle zpm-zsh/title
+antigen bundle jreese/zsh-titles
 #virtualbox
 
 # Python Plugins
@@ -103,3 +117,4 @@ POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 if [ -e ~/.zprofile ];then
   source ~/.zprofile
 fi
+
